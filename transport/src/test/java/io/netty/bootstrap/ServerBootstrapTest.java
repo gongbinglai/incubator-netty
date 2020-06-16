@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ServerBootstrapTest {
 
-    @Test(timeout = 5000)
+    @Test(timeout = 50000)
     public void testHandlerRegister() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicReference<Throwable> error = new AtomicReference<Throwable>();

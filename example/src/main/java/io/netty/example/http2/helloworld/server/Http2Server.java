@@ -40,6 +40,8 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 /**
  * A HTTP/2 Server that responds to requests with a Hello World. Once started, you can test the
  * server with the example client.
+ *
+ * netty server hello world
  */
 public final class Http2Server {
 
