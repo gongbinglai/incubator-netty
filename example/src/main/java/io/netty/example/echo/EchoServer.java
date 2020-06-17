@@ -32,6 +32,8 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 /**
  * Echoes back any received data from a client.
+ *
+ * netty 入门
  */
 public final class EchoServer {
 
@@ -48,8 +50,10 @@ public final class EchoServer {
             sslCtx = null;
         }
 
-        // Configure the server.
+        // Configure the server.  bossGroup用来epoll获取请求
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+
+        //worker group用来处理请求
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         final EchoServerHandler serverHandler = new EchoServerHandler();
         try {
