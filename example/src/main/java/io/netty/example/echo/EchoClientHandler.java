@@ -19,6 +19,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.internal.logging.InternalLogLevel;
 
 /**
  * Handler implementation for the echo client.  It initiates the ping-pong
@@ -41,12 +43,25 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        ctx.writeAndFlush(firstMessage);
+        //ctx.writeAndFlush(firstMessage);
+        ctx.writeAndFlush(Unpooled.copiedBuffer("777$_".getBytes()));
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ctx.write(msg);
+        //ctx.write(msg);
+        try {
+            //do something msg
+            ByteBuf buf = (ByteBuf)msg;
+            byte[] data = new byte[buf.readableBytes()];
+            buf.readBytes(data);
+            String request = new String(data, "utf-8");
+            System.out.println("=============服务端返回的数据==================== " + request);
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            ReferenceCountUtil.release(msg);
+        }
     }
 
     @Override
