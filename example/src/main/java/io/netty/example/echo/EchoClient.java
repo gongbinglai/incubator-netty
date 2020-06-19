@@ -16,6 +16,8 @@
 package io.netty.example.echo;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -24,6 +26,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.FixedLengthFrameDecoder;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -65,7 +69,12 @@ public final class EchoClient {
                      if (sslCtx != null) {
                          p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
                      }
+                     ByteBuf buf = Unpooled.copiedBuffer("$_".getBytes());
                      //p.addLast(new LoggingHandler(LogLevel.INFO));
+                     //字符串分割符
+                     //p.addLast(new DelimiterBasedFrameDecoder(1024,buf));
+                     //按照固定长度字符串进行截取，如发送777ABCDEF，其实会拆分为777 ABC DEF，分3次发送
+				     p.addLast(new FixedLengthFrameDecoder(3));
                      p.addLast(new EchoClientHandler());
                  }
              });

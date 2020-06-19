@@ -41,7 +41,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
             System.out.println("=============客户端发送来的消息====================" + request);
             //写给客户端
             String response = "我是反馈的信息";
-            ctx.writeAndFlush(Unpooled.copiedBuffer(("888$_").getBytes()));
+            ctx.writeAndFlush(Unpooled.copiedBuffer(("888abcdef").getBytes()));
         }catch(Exception e){
             e.printStackTrace();
         }

@@ -44,7 +44,7 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         //ctx.writeAndFlush(firstMessage);
-        ctx.writeAndFlush(Unpooled.copiedBuffer("777$_".getBytes()));
+        ctx.writeAndFlush(Unpooled.copiedBuffer("777ABCDEF$_".getBytes()));
     }
 
     @Override
