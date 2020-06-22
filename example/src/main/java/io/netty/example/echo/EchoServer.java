@@ -61,6 +61,7 @@ public final class EchoServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         final EchoServerHandler serverHandler = new EchoServerHandler();
         try {
+            //创建一个辅助类Bootstrap，就是对我们的Server进行一系列的配置
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)

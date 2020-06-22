@@ -74,7 +74,7 @@ public final class EchoClient {
                      //字符串分割符
                      //p.addLast(new DelimiterBasedFrameDecoder(1024,buf));
                      //按照固定长度字符串进行截取，如发送777ABCDEF，其实会拆分为777 ABC DEF，分3次发送
-				     p.addLast(new FixedLengthFrameDecoder(3));
+				     p.addLast(new FixedLengthFrameDecoder(100));
                      p.addLast(new EchoClientHandler());
                  }
              });

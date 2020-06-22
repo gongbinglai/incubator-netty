@@ -419,7 +419,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
     }
 
     @Override
-    //死循环监听处理事件
+    //死循环监听处理事件  NioEventLoop 监听请求事件
     protected void run() {
         for (;;) {
             try {

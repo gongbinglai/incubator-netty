@@ -153,6 +153,7 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
             }
         }
 
+        //channel管道，链表结构 next prev
         ChannelPipeline p = channel.pipeline();
 
         final EventLoopGroup currentChildGroup = childGroup;
