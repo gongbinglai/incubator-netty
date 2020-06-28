@@ -334,6 +334,7 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
 
     @Override
     public ChannelHandlerContext fireChannelRead(final Object msg) {
+        //在这找到DelimiterBasedFrameDecoder，EchoServerHandler
         invokeChannelRead(findContextInbound(), msg);
         return this;
     }

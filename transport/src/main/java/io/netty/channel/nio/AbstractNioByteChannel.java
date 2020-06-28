@@ -135,7 +135,10 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                 clearReadPending();
                 return;
             }
+            //pipeline 是处理器链表 next
             final ChannelPipeline pipeline = pipeline();
+
+            //字节缓冲分配器，动态调整，自适配大小
             final ByteBufAllocator allocator = config.getAllocator();
             final RecvByteBufAllocator.Handle allocHandle = recvBufAllocHandle();
             allocHandle.reset(config);
@@ -145,6 +148,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             try {
                 do {
                     byteBuf = allocHandle.allocate(allocator);
+                    //doReadBytes 读取客户端发送的数据内容
                     allocHandle.lastBytesRead(doReadBytes(byteBuf));
                     if (allocHandle.lastBytesRead() <= 0) {
                         // nothing was read. release the buffer.
@@ -160,6 +164,11 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
                     allocHandle.incMessagesRead(1);
                     readPending = false;
+                    //服务端pipeline一系列处理器，用来处理请求数据
+                    /**
+                     * DelimiterBasedFrameDecoder extends ByteToMessageDecoder  extends ChannelInboundHandlerAdapter
+                     * EchoServerHandler extends ChannelInboundHandlerAdapter
+                     */
                     pipeline.fireChannelRead(byteBuf);
                     byteBuf = null;
                 } while (allocHandle.continueReading());

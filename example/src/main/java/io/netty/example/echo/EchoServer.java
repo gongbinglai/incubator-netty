@@ -54,7 +54,7 @@ public final class EchoServer {
             sslCtx = null;
         }
 
-        // Configure the server.  bossGroup用来epoll获取请求
+        // Configure the server.  bossGroup用来epoll获取请求  NioEventLoopGroup extends MultithreadEventLoopGroup
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 
         //worker group用来处理请求
@@ -76,8 +76,8 @@ public final class EchoServer {
                      }
                      ByteBuf buf = Unpooled.copiedBuffer("$_".getBytes());
                      //字符串分割符
-                     //p.addLast(new DelimiterBasedFrameDecoder(1024,buf));
-                     p.addLast(new FixedLengthFrameDecoder(3));
+                     p.addLast(new DelimiterBasedFrameDecoder(1024,buf));
+                     //p.addLast(new FixedLengthFrameDecoder(3));
                      //p.addLast(new LoggingHandler(LogLevel.INFO));
                      p.addLast(serverHandler);
                  }
