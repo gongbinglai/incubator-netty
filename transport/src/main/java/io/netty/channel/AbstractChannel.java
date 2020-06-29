@@ -890,6 +890,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 return;
             }
 
+            //write时，将message添加到outboundBuffer
             outboundBuffer.addMessage(msg, size, promise);
         }
 
@@ -936,6 +937,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
 
             try {
+                //发送数据
                 doWrite(outboundBuffer);
             } catch (Throwable t) {
                 if (t instanceof IOException && config().isAutoClose()) {

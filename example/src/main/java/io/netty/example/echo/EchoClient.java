@@ -55,7 +55,12 @@ public final class EchoClient {
             sslCtx = null;
         }
 
-        // Configure the client.
+        /**
+         * Configure the client.
+         * 同样也是创建了NioEventLoop，Selector，通过死循环来监听事件
+         * 服务端返回的响应，在客户端看来就是可读事件，所以通过channelRead来获取服务端返回的数据
+         */
+
         EventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap b = new Bootstrap();

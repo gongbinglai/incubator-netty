@@ -39,7 +39,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
         try{
             String request = new String(data, "utf-8");
             System.out.println("=============客户端发送来的消息====================" + request);
-            //写给客户端
+            //写给客户端，客户端和服务端写信息都是通过ctx.writeAndFlush
             String response = "我是反馈的信息";
             ctx.writeAndFlush(Unpooled.copiedBuffer(("888abcdef").getBytes()));
         }catch(Exception e){

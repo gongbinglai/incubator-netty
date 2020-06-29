@@ -1362,11 +1362,13 @@ public class DefaultChannelPipeline implements ChannelPipeline {
 
         @Override
         public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) {
+            //调用AbstractChannel的write方法
             unsafe.write(msg, promise);
         }
 
         @Override
         public void flush(ChannelHandlerContext ctx) {
+            //调用AbstractChannel的flush方法
             unsafe.flush();
         }
 
