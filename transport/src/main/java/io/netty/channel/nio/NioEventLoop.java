@@ -489,6 +489,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                         processSelectedKeys();
                     } finally {
                         // Ensure we always run tasks.
+                        // 运行所有普通任务和定时任务，不限制时间
                         runAllTasks();
                     }
                 } else {
@@ -498,6 +499,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
                     } finally {
                         // Ensure we always run tasks.
                         final long ioTime = System.nanoTime() - ioStartTime;
+                        // 运行所有普通任务和定时任务，限制时间
                         runAllTasks(ioTime * (100 - ioRatio) / ioRatio);
                     }
                 }

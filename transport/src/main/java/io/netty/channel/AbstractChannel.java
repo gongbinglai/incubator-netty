@@ -560,6 +560,8 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
 
             boolean wasActive = isActive();
             try {
+
+                //真正的将channel绑定到selector
                 doBind(localAddress);
             } catch (Throwable t) {
                 safeSetFailure(promise, t);
@@ -568,9 +570,14 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
 
             if (!wasActive && isActive()) {
+                /**
+                 * eventLoop().execute(task);
+                 * 在这执行eventLoop的task
+                 */
                 invokeLater(new Runnable() {
                     @Override
                     public void run() {
+                        //channel active后处理
                         pipeline.fireChannelActive();
                     }
                 });

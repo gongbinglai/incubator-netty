@@ -777,12 +777,14 @@ abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
         if (executor.inEventLoop()) {
             if (flush) {
                 /**
-                 * 调用DefaultChannelPipeline.invokeWriteAndFlush，最终调用的还是NioSocketChannel.write
+                 * 1、调用DefaultChannelPipeline.invokeWriteAndFlush，最终调用的还是NioSocketChannel.write
                  * write 只是加到缓冲区 ChannelOutboundBuffer对象
                  * flush 才是发送ChannelOutboundBuffer对象中的内容，最终调用的是SocketChannelImpl.write，最终通过是Socket发送tcp请求
                  *
-                 * 客户端发送请求、服务端返回响应，也就是write方法调用的都是这里的write方法，唯一区别的就是在最终发送socket请求的时候local和remote地址
+                 * 2、客户端发送请求、服务端返回响应，也就是write方法调用的都是这里的write方法，唯一区别的就是在最终发送socket请求的时候local和remote地址
                  * 不一样而已。
+                 *
+                 * 3、在write时，会调用encode对内容进行编码
                  */
                 next.invokeWriteAndFlush(m, promise);
             } else {

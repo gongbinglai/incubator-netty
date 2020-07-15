@@ -103,6 +103,10 @@ public class ProtobufDecoder extends MessageToMessageDecoder<ByteBuf> {
     }
 
     @Override
+    /**
+     * Protobuf 对传输的报文进行解码
+     * 在AbstractChannelHandlerContext.invokeChannelRead调用decode进行消息解码
+     */
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out)
             throws Exception {
         final byte[] array;

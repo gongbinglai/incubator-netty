@@ -54,18 +54,39 @@ public final class EchoServer {
             sslCtx = null;
         }
 
-        // Configure the server.  bossGroup用来epoll获取请求  NioEventLoopGroup extends MultithreadEventLoopGroup
+        /**
+         * 1、Configure the server.  bossGroup用来epoll获取请求  NioEventLoopGroup extends MultithreadEventLoopGroup
+         * 2、由于server服务端只绑定1个端口，所以NioEventLoop只启动1个线程即可。
+         * 3、创建NioEventLoop，NioEventLoop依赖NioSelector
+         *
+         */
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 
-        //worker group用来处理请求
+        /**
+         * 1、worker group用来处理io请求，boss线程处理accept连接事件，worker线程处理具体的io事件，这就是reactor模型，如果handler业务逻辑执行比较耗时，可以交给单独的线程池来处理
+         * 2、创建NioEventLoop，线程数量为cpu核数*2
+         */
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         final EchoServerHandler serverHandler = new EchoServerHandler();
         try {
-            //创建一个辅助类Bootstrap，就是对我们的Server进行一系列的配置
+            /**
+             * 创建一个辅助类Bootstrap，就是对我们的Server进行一系列的配置
+             *
+             */
             ServerBootstrap b = new ServerBootstrap();
+            /**
+             * ServerBootstrap依赖两个EventLoopGroup：group，chilidGroup，group时只是设置EventLoopGroup
+             */
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .option(ChannelOption.SO_BACKLOG, 100)
+              //设置最大等待连接数量
+             //.option(ChannelOption.SO_BACKLOG, 100)
+
+             /**
+             *  childOption和option的区别？
+              */
+             .childOption(ChannelOption.SO_BACKLOG, 100)
+             //ServerBootstrap 存在handler和childHandler两个属性
              .handler(new LoggingHandler(LogLevel.INFO))
              .childHandler(new ChannelInitializer<SocketChannel>() {
                  @Override
@@ -80,10 +101,16 @@ public final class EchoServer {
                      //p.addLast(new FixedLengthFrameDecoder(3));
                      //p.addLast(new LoggingHandler(LogLevel.INFO));
                      p.addLast(serverHandler);
+                     p.addLast(new EchoServerHandler2());
                  }
              });
 
-            // Start the server.
+            /**
+             * Start the server.
+             * 1、在绑定端口的时候，创建并初始化 NioServerSocketChannel
+             * 2、绑定端口
+             */
+
             ChannelFuture f = b.bind(PORT).sync();
 
             // Wait until the server socket is closed.

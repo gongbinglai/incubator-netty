@@ -135,7 +135,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                 clearReadPending();
                 return;
             }
-            //pipeline 是处理器链表 next
+            //pipeline 是处理器链表 next，
+            // addLast 将handler添加到链尾
+            // addFist 将handler添加到链头
             final ChannelPipeline pipeline = pipeline();
 
             //字节缓冲分配器，动态调整，自适配大小
@@ -164,8 +166,8 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 
                     allocHandle.incMessagesRead(1);
                     readPending = false;
-                    //服务端pipeline一系列处理器，用来处理请求数据
                     /**
+                     * 服务端pipeline一系列处理器，用来处理请求数据  DefaultChannelPipeline
                      * DelimiterBasedFrameDecoder extends ByteToMessageDecoder  extends ChannelInboundHandlerAdapter
                      * EchoServerHandler extends ChannelInboundHandlerAdapter
                      */

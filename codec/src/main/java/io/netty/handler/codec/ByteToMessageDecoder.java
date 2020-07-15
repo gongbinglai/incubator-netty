@@ -275,6 +275,7 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
                 } else {
                     cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);
                 }
+                //解码处理，调用具体的handler进行解码处理
                 callDecode(ctx, cumulation, out);
             } catch (DecoderException e) {
                 throw e;
@@ -294,6 +295,8 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
 
                 int size = out.size();
                 decodeWasNull = !out.insertSinceRecycled();
+
+                //很重要，调用后续的handler继续处理
                 fireChannelRead(ctx, out, size);
                 out.recycle();
             }
