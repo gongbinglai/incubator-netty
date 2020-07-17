@@ -87,7 +87,19 @@ public final class EchoClient {
                      }
                      ByteBuf buf = Unpooled.copiedBuffer("$_".getBytes());
                      //p.addLast(new LoggingHandler(LogLevel.INFO));
-                     //字符串分割符  encode编码  decode解码
+                     /**
+                      * 1、字符串分割符
+                      * 2、具体的编解码由具体的应用来实现，在应用层指定hession2，protobuf，netty只是负责拆包、粘包，
+                      *   但是netty也内置了marshalling、protobuf、string、xml这些编解码实现，但是如果使用dubbo、zookeeper这些
+                      *   框架的话，编解码的实现还是在应用层指定
+                      * 3、注意handler顺序，先是解码，再是编码，最后是handler处理
+                      *
+                      * handler发送数据顺序： handler.writeAndFlush -> 编码 -> 解码
+                      * handler接收数据顺序：
+                      *
+                      */
+//                     p.addLast(MarshallingCodeCFactory.buildMarshallingDecoder());
+//                     p.addLast(MarshallingCodeCFactory.buildMarshallingEncoder());
                      p.addLast(new DelimiterBasedFrameDecoder(1024,buf));
                      //按照固定长度字符串进行截取，如发送777ABCDEF，其实会拆分为777 ABC DEF，分3次发送
 				     //p.addLast(new FixedLengthFrameDecoder(100));

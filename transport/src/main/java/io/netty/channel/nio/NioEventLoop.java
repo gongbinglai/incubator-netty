@@ -684,7 +684,10 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop     1 为可读事件  16 为accept连接事件
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
-                //AbstractNioChannel.NioUnsafe
+                /**
+                 * AbstractNioMessageChannel.NioUnsafe
+                 * 接收客户端发来的消息并处理
+                 */
                 unsafe.read();
             }
         } catch (CancelledKeyException ignored) {

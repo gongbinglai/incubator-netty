@@ -471,6 +471,7 @@ public class IdleStateHandler extends ChannelDuplexHandler {
 
     private final class ReaderIdleTimeoutTask extends AbstractIdleTask {
 
+        //用来检测读空闲的任务处理类
         ReaderIdleTimeoutTask(ChannelHandlerContext ctx) {
             super(ctx);
         }
@@ -478,6 +479,8 @@ public class IdleStateHandler extends ChannelDuplexHandler {
         @Override
         protected void run(ChannelHandlerContext ctx) {
             long nextDelay = readerIdleTimeNanos;
+
+            //判断是否读空闲
             if (!reading) {
                 nextDelay -= ticksInNanos() - lastReadTime;
             }
@@ -504,6 +507,7 @@ public class IdleStateHandler extends ChannelDuplexHandler {
 
     private final class WriterIdleTimeoutTask extends AbstractIdleTask {
 
+        //用来检测写空闲的任务类
         WriterIdleTimeoutTask(ChannelHandlerContext ctx) {
             super(ctx);
         }
@@ -512,6 +516,8 @@ public class IdleStateHandler extends ChannelDuplexHandler {
         protected void run(ChannelHandlerContext ctx) {
 
             long lastWriteTime = IdleStateHandler.this.lastWriteTime;
+
+            //判断是否写空闲
             long nextDelay = writerIdleTimeNanos - (ticksInNanos() - lastWriteTime);
             if (nextDelay <= 0) {
                 // Writer is idle - set a new timeout and notify the callback.
