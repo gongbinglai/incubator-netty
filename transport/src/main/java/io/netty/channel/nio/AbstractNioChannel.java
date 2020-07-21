@@ -383,6 +383,16 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         boolean selected = false;
         for (;;) {
             try {
+
+                /**
+                 * 1、很重要，最终调用的是java.nio.channels下的channel注册方法
+                 * SelectionKey register(Selector sel, int ops, Object att)
+                 * 2、返回的selectionKey结构如下：
+                 * SelectionKeyImpl
+                 * 	channel：NioServerSocketChannel
+                 * 	selector：WindowsSelectorImpl
+                 * 	attachment：NioServerSocketChannel
+                 */
                 selectionKey = javaChannel().register(eventLoop().unwrappedSelector(), 0, this);
                 return;
             } catch (CancelledKeyException e) {

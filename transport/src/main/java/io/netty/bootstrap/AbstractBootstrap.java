@@ -279,6 +279,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     }
 
     private ChannelFuture doBind(final SocketAddress localAddress) {
+        //在这创建并初始化、注册NioServerSocketChannel
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
         if (regFuture.cause() != null) {
@@ -317,6 +318,11 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
+            /**
+             * 1、通过ReflectiveChannelFactory工厂模式创建NioServerSocketChannel，
+             *    是通过constructor.newInstance()创建的
+             * 2、创建channel的时候，创建了pipeline，为默认的DefaultChannelPipeline
+             */
             channel = channelFactory.newChannel();
             //初始化NioServerSocketChannel
             init(channel);
@@ -331,7 +337,11 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
             return new DefaultChannelPromise(new FailedChannel(), GlobalEventExecutor.INSTANCE).setFailure(t);
         }
 
-        //注册NioServerSocketChannel
+        /**
+         * 1、注册NioServerSocketChannel，MultithreadEventExecutorGroup -> SingleThreadEventLoop -> AbstractChanel.register
+         * 2、注册的是DefaultChannelPromise
+         *
+         */
         ChannelFuture regFuture = config().group().register(channel);
         if (regFuture.cause() != null) {
             if (channel.isRegistered()) {

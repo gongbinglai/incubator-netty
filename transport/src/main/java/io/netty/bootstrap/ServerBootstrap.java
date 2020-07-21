@@ -140,11 +140,15 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
     @Override
     void init(Channel channel) throws Exception {
         final Map<ChannelOption<?>, Object> options = options0();
+
+        //设置channel的options配置项
         synchronized (options) {
             setChannelOptions(channel, options, logger);
         }
 
         final Map<AttributeKey<?>, Object> attrs = attrs0();
+
+        //设置channel的attrs属性
         synchronized (attrs) {
             for (Entry<AttributeKey<?>, Object> e: attrs.entrySet()) {
                 @SuppressWarnings("unchecked")

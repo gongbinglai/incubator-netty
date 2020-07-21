@@ -481,6 +481,15 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                 register0(promise);
             } else {
                 try {
+                    /**
+                     *1、将注册的任务添加到队列(LinkedBlockingQueue)，然后再通过executor执行器执行
+                     * SingleThreadEventExecutor.addTask 添加任务
+                     * AbstractEventExecutor.safeExecute 执行任务
+                     *
+                     * 2、此处的eventLoop为NioEventLoop，继承结构如下：
+                     * NioEventLoop extends SingleThreadEventLoop
+                     * SingleThreadEventLoop extends SingleThreadEventExecutor
+                     */
                     eventLoop.execute(new Runnable() {
                         @Override
                         public void run() {

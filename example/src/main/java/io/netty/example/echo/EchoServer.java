@@ -57,7 +57,7 @@ public final class EchoServer {
         /**
          * 1、Configure the server.  bossGroup用来epoll获取请求  NioEventLoopGroup extends MultithreadEventLoopGroup
          * 2、由于server服务端只绑定1个端口，所以NioEventLoop只启动1个线程即可。
-         * 3、创建NioEventLoop，NioEventLoop依赖NioSelector
+         * 3、创建NioEventLoop，NioEventLoop依赖NioSelector，一个NioEventLoop对应一个NioSelector
          *
          */
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -107,10 +107,11 @@ public final class EchoServer {
 
             /**
              * Start the server.
-             * 1、在绑定端口的时候，创建并初始化 NioServerSocketChannel
-             * 2、绑定端口
+             * 1、在绑定端口的时候，主要做了如下几件事情：
+             * （1）创建并初始化NioServerSocketChannel
+             * （2）注册selector
+             * （3）绑定服务器端口
              */
-
             ChannelFuture f = b.bind(PORT).sync();
 
             // Wait until the server socket is closed.
