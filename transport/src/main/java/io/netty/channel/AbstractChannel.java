@@ -491,6 +491,7 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
                      * SingleThreadEventLoop extends SingleThreadEventExecutor
                      */
                     eventLoop.execute(new Runnable() {
+                        //通过异步任务来进行channel的注册
                         @Override
                         public void run() {
                             register0(promise);

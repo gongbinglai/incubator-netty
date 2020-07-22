@@ -753,8 +753,10 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         }
 
         boolean inEventLoop = inEventLoop();
+        //将任务添加到阻塞队列中
         addTask(task);
         if (!inEventLoop) {
+            //start线程，这样就调到task的run方法
             startThread();
             if (isShutdown()) {
                 boolean reject = false;
@@ -902,6 +904,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                 boolean success = false;
                 updateLastExecutionTime();
                 try {
+                    //在这调用了NioEventLoop.run
                     SingleThreadEventExecutor.this.run();
                     success = true;
                 } catch (Throwable t) {
